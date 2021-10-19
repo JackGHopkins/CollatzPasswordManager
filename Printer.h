@@ -7,6 +7,7 @@ class Printer {
 public:
 	std::fstream										password_file;
 
+	Printer();
 	Printer(std::string);
 	~Printer();
 

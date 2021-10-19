@@ -1,6 +1,10 @@
 #include <fstream>
 #include "Printer.h"
 
+Printer::Printer() {
+	this->path = "Null";
+}
+
 Printer::Printer(std::string path) {
 	this->path = path;
 }

@@ -1,7 +1,5 @@
-#include <iostream>
-#include "CollatzEncryption.h"
 #include "Main.h"
-#include "Printer.h"
+
 
 std::string password; 
 std::string passwordtest;
@@ -59,25 +57,75 @@ void create_user() {
 	p.password_file.open(p.get_path(), std::ios::out | std::ios::in | std::ios::app);
 	std::cout << "Create Username: ";
 	std::cin >> uname;
-	find_username(uname);
-	std::cout << "Create Password: ";
-	std::cin >> upw;
 
-	upw = encryption(upw);
+	if (find_username(uname, p, upw)) {
+		std::cout << "Create Password: ";
+			std::cin >> upw;
+			upw = encryption(upw);
 
-	p.password_file << uname + " " + upw << std::endl;
+			p.password_file << uname + " " + upw << std::endl;
+	}
+	else {
+		std::cout << "Username already taken. Please try again." << std::endl;
+	}
 	p.password_file.close();
 }
 
 void check_user() {
+	std::string uname;
+	std::string upw;
+	Printer p(password);
+	int attempts = 3;
 
+	try {
+		if (!p.password_file)
+			throw;
+	}
+	catch (int f) {
+		std::cout << "FileAccessError: Could not access File." << std::endl;
+	}
+	p.password_file.open(p.get_path(), std::ios::out | std::ios::in | std::ios::app);
+	std::cout << "Username: ";
+	std::cin >> uname;
+
+	if (find_username(uname, p, upw)){
+		std::cout << "Password:" << std::endl;
+		std::string temp_p;
+		while (true) {
+			std::cin >> temp_p;
+			if (temp_p == upw) {
+				std::cout << "Password Authenticated." << std::endl;
+				break;
+			}
+			else {
+				attempts--;
+				std::cout << "Password Incorrect. " << attempts << " attempts remaining." << std::endl;
+			}
+			if (attempts == 0)
+				break;
+		}
+	}
 }
- 
-void find_username(std::string uname) {
 
+bool find_username(std::string uname, Printer& p, std::string& pword) {
+	std::string line;
+	std::string temp_u;
+	std::string temp_p;
+
+	std::ifstream file(password);
+
+	file.open(password, std::ios::in | std::ios::out);
+	while (getline(file, line)) {
+		
+		if (temp_u == uname) {
+			pword = temp_p;
+			return true;
+		}
+	}
+	return false;
 }
 
 void strength_test() {
-
+	generate(passwordtest);
 }
 
