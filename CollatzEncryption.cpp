@@ -16,7 +16,7 @@ std::string encryption(std::string pword) {
 }
 
 
-void collatz_function(int n, int& steps) {
+void collatz_function(unsigned int n, int& steps) {
 	n = (n % 2 == 0) ? n / 2 : 3 * n + 1;
 	steps += 1;
 	if (n != 1)

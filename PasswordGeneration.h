@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <fstream>
 #include <iterator>
 #include <sstream>
@@ -9,4 +10,4 @@
 
 void generate(std::string path);
 void generate_length_variance(std::fstream &file);
-void generate_combinatorial_variance();
+void generate_combinatorial_variance(std::fstream& file);

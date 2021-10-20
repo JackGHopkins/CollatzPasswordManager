@@ -1,6 +1,5 @@
 #include "Main.h"
 
-
 std::string password; 
 std::string passwordtest;
 
@@ -27,6 +26,7 @@ void start_menu() {
 		switch (select)
 		{
 		default:
+			
 			break;
 		case 1:
 			create_user();
@@ -51,14 +51,16 @@ void create_user() {
 		if (!p.password_file)
 			throw; 
 	}
-	catch(int e) {
+	catch(const std::invalid_argument& iae) {
 		std::cout << "FileAccessError: Could not access File." << std::endl;
 	}
 	p.password_file.open(p.get_path(), std::ios::out | std::ios::in | std::ios::app);
 	std::cout << "Create Username: ";
 	std::cin >> uname;
 
-	if (find_username(uname, p, upw)) {
+	uname = space_check(uname);
+
+	if (!find_username(uname, p, upw)) {
 		std::cout << "Create Password: ";
 			std::cin >> upw;
 			upw = encryption(upw);
@@ -79,20 +81,21 @@ void check_user() {
 
 	try {
 		if (!p.password_file)
-			throw;
+			throw std::invalid_argument("File: " + password + " Not found.");
 	}
-	catch (int f) {
+	catch (const std::invalid_argument& iae) {
 		std::cout << "FileAccessError: Could not access File." << std::endl;
 	}
-	p.password_file.open(p.get_path(), std::ios::out | std::ios::in | std::ios::app);
+	p.password_file.open(p.get_path(), std::ios::in);
 	std::cout << "Username: ";
 	std::cin >> uname;
 
 	if (find_username(uname, p, upw)){
-		std::cout << "Password:" << std::endl;
+		std::cout << "Password:";
 		std::string temp_p;
 		while (true) {
 			std::cin >> temp_p;
+			temp_p = encryption(temp_p);
 			if (temp_p == upw) {
 				std::cout << "Password Authenticated." << std::endl;
 				break;
@@ -109,14 +112,20 @@ void check_user() {
 
 bool find_username(std::string uname, Printer& p, std::string& pword) {
 	std::string line;
-	std::string temp_u;
-	std::string temp_p;
 
-	std::ifstream file(password);
 
-	file.open(password, std::ios::in | std::ios::out);
-	while (getline(file, line)) {
-		
+	std::ifstream file;
+
+	file.open(password);
+
+	while (std::getline(file, line)) {
+		std::stringstream ss(line);
+		std::string temp_u;
+		std::string temp_p;
+
+		std::getline(ss, temp_u, ' ');
+		ss >> temp_p;
+
 		if (temp_u == uname) {
 			pword = temp_p;
 			return true;
@@ -127,5 +136,17 @@ bool find_username(std::string uname, Printer& p, std::string& pword) {
 
 void strength_test() {
 	generate(passwordtest);
+}
+
+std::string space_check(std::string uname) {
+	std::vector<char> uname_check;
+	for (char c : uname) {
+		if (c == ' ') {
+			break;
+		}
+		uname_check.push_back(c);
+	}
+
+	return std::string(uname.begin(), uname.end());
 }
 
