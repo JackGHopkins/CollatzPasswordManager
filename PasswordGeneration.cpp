@@ -49,4 +49,19 @@ void generate_combinatorial_variance(std::fstream& file)
 	}
 }
 
+std::string decryption(std::string e_pword) {
+	int** array;
+	array = new int* [255];
+	for (int i = 0; i < 10; i++)
+		array[i] = new int[2];
+
+	collatz_ascii_array(array);
+
+
+
+	for (auto i = 0; i < 255; i++)
+		delete[] array[i];
+	delete[] array;
+}
+
 

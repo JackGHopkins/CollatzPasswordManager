@@ -11,3 +11,4 @@
 void generate(std::string path);
 void generate_length_variance(std::fstream &file);
 void generate_combinatorial_variance(std::fstream& file);
+std::string decryption(std::string e_pword);
