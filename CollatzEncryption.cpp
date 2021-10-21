@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "CollatzEncryption.h"
 
 std::string encryption(std::string pword) {
@@ -14,7 +14,6 @@ std::string encryption(std::string pword) {
 	return ec_pword;
 }
 
-
 void collatz_function(unsigned int n, int& steps) {
 	n = (n % 2 == 0) ? n / 2 : 3 * n + 1;
 	steps += 1;
@@ -22,17 +21,9 @@ void collatz_function(unsigned int n, int& steps) {
 		collatz_function(n, steps);
 }
 
-std::string concatinate(std::string s1, int b) {
+inline std::string concatinate(std::string s1, int b) {
 	std::string s2 = std::to_string(b);
 	std::string s_concat = s1 + s2;
 
 	return s_concat;
-}
-
-void collatz_ascii_array(int **arr) {
-	for (unsigned int i = 0; i < 255; i++) {
-		int steps = 0;
-		collatz_function(i + 1, steps);
-	}
-	std::sort(arr, arr + 255);
 }

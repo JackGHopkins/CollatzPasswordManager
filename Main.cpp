@@ -56,9 +56,15 @@ void create_user() {
 	}
 	p.password_file.open(p.get_path(), std::ios::out | std::ios::in | std::ios::app);
 	std::cout << "Create Username: ";
-	std::cin >> uname;
 
-	uname = space_check(uname);
+	std::cin.ignore(); 
+	std::getline(std::cin, uname, static_cast<char>(10));
+	for (auto c : uname) {
+		if (c == ' ') {
+			std::cout << "Unacceptable Username. Please remove whitespace when inputing Username." << std::endl;
+			return;
+		}
+	}
 
 	if (!find_username(uname, p, upw)) {
 		std::cout << "Create Password: ";
@@ -77,7 +83,11 @@ void check_user() {
 	std::string uname;
 	std::string upw;
 	Printer p(password);
-	int attempts = 3;
+	
+	std::any attempts;
+	
+	std::any_cast<int>(attempts);
+	attempts = 3;
 
 	try {
 		if (!p.password_file)
@@ -101,10 +111,10 @@ void check_user() {
 				break;
 			}
 			else {
-				attempts--;
-				std::cout << "Password Incorrect. " << attempts << " attempts remaining." << std::endl;
+				attempts =- 1;
+				std::cout << "Password Incorrect. " << std::any_cast<int>(attempts) << " attempts remaining." << std::endl;
 			}
-			if (attempts == 0)
+			if (std::any_cast<int>(attempts) == 0)
 				break;
 		}
 	}
@@ -136,17 +146,5 @@ bool find_username(std::string uname, Printer& p, std::string& pword) {
 
 void strength_test() {
 	generate(passwordtest);
-}
-
-std::string space_check(std::string uname) {
-	std::vector<char> uname_check;
-	for (char c : uname) {
-		if (c == ' ') {
-			break;
-		}
-		uname_check.push_back(c);
-	}
-
-	return std::string(uname.begin(), uname.end());
 }
 
