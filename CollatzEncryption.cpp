@@ -15,10 +15,10 @@ std::string encryption(std::string pword) {
 }
 
 void collatz_function(unsigned int n, int& steps) {
-	n = (n % 2 == 0) ? n / 2 : 3 * n + 1;
-	steps += 1;
-	if (n != 1)
-		collatz_function(n, steps);
+	while (n != 1 && n != 0) {
+		n = (n % 2 == 0) ? n / 2 : 3 * n + 1;
+		steps += 1;
+	}
 }
 
 inline std::string concatinate(std::string s1, int b) {

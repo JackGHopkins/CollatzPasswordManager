@@ -5,14 +5,14 @@ std::multimap<int, char> mmap;
 
 void generate(std::string path) {
 	std::fstream file;
-	file.open(path, std::ios::out | std::ios::in | std::ios::app);
+	file.open(path, std::ios::out | std::ios::in);
 	mmap = create_ascii_map();
-	//generate_length_variance(file);
-	//generate_combinatorial_variance(file);
+	generate_length_variance(file);
+	generate_combinatorial_variance(file);
 
 	std::string line;
 
-	while (std::getline(file, line)) {
+	/*while (std::getline(file, line)) {
 		std::stringstream ss(line);
 		std::string temp_p;
 
@@ -23,7 +23,7 @@ void generate(std::string path) {
 		s = encryption(s);
 		if(s == temp_p)
 			std::cout << "P Cracked" << std::endl;
-	}
+	}*/
 	file.close();
 }
 
@@ -159,9 +159,9 @@ std::multimap<int, char> create_ascii_map() {
 		mmap.insert(std::make_pair(steps, i));
 	}
 
-	for (auto const& i : mmap) {
-		std::cout << i.first << " (" << i.second << " char)" << '\n';
-	}
+	//for (auto const& i : mmap) {
+	//	std::cout << i.first << " (" << i.second << " char)" << '\n';
+	//}
 	return mmap;
 }
 
