@@ -7,23 +7,27 @@ void generate(std::string path) {
 	std::fstream file;
 	file.open(path, std::ios::out | std::ios::in);
 	mmap = create_ascii_map();
-	generate_length_variance(file);
-	generate_combinatorial_variance(file);
+	//generate_length_variance(file);
+	//generate_combinatorial_variance(file);
+
+	int no_pwords_cra = 0;
 
 	std::string line;
 
-	/*while (std::getline(file, line)) {
+	while (std::getline(file, line)) {
 		std::stringstream ss(line);
 		std::string temp_p;
 
 		std::getline(ss, temp_p);
 		std::string s = decryption(temp_p);
-		std::cout << temp_p << std::endl;
-		std::cout << s << std::endl;
 		s = encryption(s);
-		if(s == temp_p)
+		if (s == temp_p) {
 			std::cout << "P Cracked" << std::endl;
-	}*/
+			no_pwords_cra++;
+		}
+	}
+	float per_cra = no_pwords_cra / 20000;
+	std::cout << per_cra << "% of passwords cracked" << std::endl;
 	file.close();
 }
 
@@ -79,6 +83,8 @@ std::string decryption(std::string e_pword) {
 	std::vector<std::string> possible_pwords;
 	
 	rec_decrypt(e_pword, iterator, offset, cur_pword, possible_pwords);
+	rec_decrypt(e_pword, iterator, offset, cur_pword, possible_pwords);
+	possible_pwords.push_back(std::string(cur_pword.begin(), cur_pword.end()));
 	std::string s = possible_pwords[0];
 	return s;
 }
@@ -152,12 +158,38 @@ void rec_decrypt(std::string e_pword, int iterator, int offset, std::vector<int>
 }
 
 std::multimap<int, char> create_ascii_map() {
+	// <<collatz, offset> ascii>
+	std::multimap<std::pair<int, int>, char> fmap;
 	std::multimap<int, char> mmap;
 	for (int i = 1; i < 256; i++) {
 		int steps = 0;
 		collatz_function(i, steps);
 		mmap.insert(std::make_pair(steps, i));
 	}
+
+	int max_offset = 255 + mmap.rbegin()->first;
+
+	for (int i = 256; i < max_offset; i++) {
+		int steps = 0;
+		collatz_function(i, steps);
+		mmap.insert(std::make_pair(steps, i));
+	}
+
+	int f_max_offset = max_offset + mmap.rbegin()->first;
+
+	for (int i = max_offset; i < f_max_offset; ++i) {
+		int steps = 0;
+		collatz_function(i, steps);
+		mmap.insert(std::make_pair(steps, i));
+	}
+	
+	//for (auto i = mmap.begin(); i != mmap.end(); i++) {
+	//	for (int it = 1; it < 256; it++) {
+	//		int steps = 0;
+	//		collatz_function(it + i->first, steps);
+	//		fmap.insert(std::make_pair(steps, i->first), i);
+	//	}
+	//}
 
 	//for (auto const& i : mmap) {
 	//	std::cout << i.first << " (" << i.second << " char)" << '\n';

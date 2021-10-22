@@ -84,10 +84,7 @@ void check_user() {
 	std::string upw;
 	Printer p(password);
 	
-	std::any attempts;
-	
-	std::any_cast<int>(attempts);
-	attempts = 3;
+	std::any attempts = 3;
 
 	try {
 		if (!p.password_file)
@@ -111,7 +108,7 @@ void check_user() {
 				break;
 			}
 			else {
-				attempts =- 1;
+				attempts = std::any_cast<int>(attempts) - 1;
 				std::cout << "Password Incorrect. " << std::any_cast<int>(attempts) << " attempts remaining." << std::endl;
 			}
 			if (std::any_cast<int>(attempts) == 0)
